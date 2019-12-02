@@ -1,4 +1,4 @@
-这是对GitHub上https://github.com/Kayzaks/HackingNeuralNetworks工作的一个小结，对其包括对里面攻击的介绍以及额外的延伸。但这里我以另外一种方式对机器学习中存在的安全威胁进行分类。
+这是对GitHub上https://github.com/Kayzaks/HackingNeuralNetworks 工作的一个小结，对其包括对里面攻击的介绍以及额外的延伸。但这里我以另外一种方式对机器学习中存在的安全威胁进行分类。
 
 按照机器学习的过程对存在的攻击进行分类。
 
