@@ -58,3 +58,72 @@ AF被模型识别为TF，同时不影响模型对TF，OF的识别
  **TF**: 分类为TF  $√$ , 分类为其他 $\times$
 
 **OF**: 分类为OF $√$ , 否则 $\times$
+
+
+
+
+
+## Stealing Machine Learning Models via Prediction APIs
+
+模型萃取：实际上是一个解方程的过程。对于一个模型n维weights，1个bias，一共n + 1个参数，那么至少n + 1个等式就可以解出weights和bias。（例如模型为y = kx + b, 只需要两个点，就能解出k, b）
+
+
+
+## problem & attack model
+
+* 通过少量次数查询目标模型$f$,构造一个近似的模型$\hat{f}$ , 近似的定义如下：下面两个error能取得最小值($R_{test}$是一个在测试集上D的平均error rate,  a set U of vectors uniformly chosen in X,)
+
+$$
+R_{test}(f,\hat{f}) = \frac{\begin{matrix}\sum_{(x,y)\in{D}}d(f(x),\hat{f}(x))\end{matrix}}{|D|}
+$$
+
+$$
+R{unif}(f,\hat{f}) = \frac{\begin{matrix}\sum_{x\in{D}}d(f(x), \hat{f}(x))\end{matrix}}{|R|}
+$$
+
+* 假设攻击者只能黑盒访问模型（也就是只拥有模型的 prediction API）
+
+
+
+
+
+## 攻击方法1: Equation-Solving Attacks
+
+这种攻击适用于logistic regression以及神经网络，以二分类逻辑回归为例说明
+
+一个二分类逻辑回归模型如下:其中$w,\beta$是我们要推测的值
+$$
+f(x)=\sigma(wx+\beta),\ where\  \sigma(t)=\frac{1}{1+e^{-t}}
+$$
+可以写为
+$$
+wx+\beta=\sigma^{-1}(f(x))
+$$
+因此只需要d + 1次query，就可以推测出$w, \beta$
+
+
+
+* 多分类逻辑回归和神经网络攻击方法类似
+
+
+
+## 攻击方法2:Decision Tree Path-Finding Attacks
+
+这种方适用于决策树：攻击算法如下图所示
+
+![steal model](image/steal model.png)
+
+
+
+算法说明：攻击的目标：遍历决策数的每一条路径。以一个只有两个特征值的决策树为例(size, color)
+
+* 输入x，2维（size, color）
+* 遍历size,得到p[id1]的条件为$size\le40$…,一直到得到的id不更新位置
+* 遍历color，得到获得每个id，color的取值，最终获得决策树
+
+![steal_model_decision_tree](image/steal_model_decision_tree.png)
+
+
+
+
+
