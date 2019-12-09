@@ -85,3 +85,55 @@ $$
 
 ![exp4_ILL](image/exp4_ILL.png)
 
+
+
+
+
+## Deep Neural Networks are Easily Fooled: High Conﬁdence Predictions for Unrecognizable Images（2015‘ CVPR）
+
+### 问题
+
+* 很多图片分类的模型有接近人类的能力，但计算机视觉与人类视觉有什么区别？
+* 对图片进行人类不能识别，但机器可以使图片被正确划入其他类
+
+![exp5](image/exp5.png)
+
+* 本文是对计算机视觉应用的一个思考
+
+
+
+### 产生对抗性样本的方法
+
+使用Evolutionary Algorithm(EA)算法生成对抗性样本，有两种编码方式
+
+**direct encoding**: 对于MNIST的28*28像素，每个像素点对应一个灰度值；对于ImageNet的256$\times$256像素，每个像素点对应(H、S、V)，每个像素点在[0,255]内用一个uniform random noise初始化。选择变异的数量是10%，每1000次迭代下降一半。经过200次迭代
+
+![exp6_direct_encode](image/exp6_direct_encode.png)
+
+**indirect encoding**:采用compositional pattern-producing network(CPPN，产生复杂的，规则的，类似人造或自然的图像)
+
+![exp7_indirect_encode](image/exp7_indirect_encode.png)
+
+
+
+###两种对抗性干扰在ImageNet上的结果
+
+**Figure 6**是direct encoding的结果：可以看出这种方式即使迭代20000次产生的图片，模型依然不能给出很高的置信率（模型“不认识”迭代产生的图片）
+
+**Figure7**是indirect encoding的结果: 可以看出这种方式产生的图片，模型能以很高的置信率正确分类（但在156～286中<这些类别是猫&狗>的置信率不高，一个可能的解释是这些类别的训练集数据多，overfit较轻，模型更难被对抗性样本欺骗），如果这个解释正确，那么意味着更大的训练集能解决这个问题
+
+![exp8_imagenet_result](image/exp8_imagenet_result.png)
+
+CPPN结果在ImageNet上的一些说明
+
+* 第一张图中，海星图像包含蓝色的水和橙色的海星，棒球有红色拼接在白色背景的特征，遥控器有一系列button…DNN其实大致就是根据这些特征对图像进行分类。
+* EA算法只需要生成DNN分类所需要的特征（该类特有或有区别的特征）而不是全部特征即可
+
+CPPN产生的结果有重复多次的特征，作者移除一些重复元素观察是否会对置信率产生较大影响，发现重复会提高置信率
+
+![exp9_cppn](image/exp9_cppn.png)
+
+
+
+
+

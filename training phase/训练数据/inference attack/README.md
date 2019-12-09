@@ -27,7 +27,7 @@
 ![result](image/result.png)
 
 ##Model Inversion Attacks that Exploit Confidence Information and Basic Countermeasures
-利用分类器给出的后验概率给出输入向量的缺失值
+利用分类器给出的后验概率推测出出输入向量的缺失值
 
 ### problem & attack model
 
@@ -139,11 +139,40 @@ $$
 
 
 
+## Hacking Smart Machines with Smarter Ones:How to Extract Meaningful Data from Machine Learning Classifiers
+
+推测训练集的统计信息（例如训练集的数据点性别比例是否为1:1）
 
 
 
+### problem & attack model
+
+* 提取模型训练集的统计特征
+* 攻击者知道模型的结构（算法），模型的权重
+
+
+
+### 攻击方法
+
+攻击算法描述如下：
+
+![property_inference](image/property_inference.png)
+
+算法图示：
+
+![property_attack_illustration](image/property_attack_illustration.png)
+
+
+
+* 攻击者的目的是推测$D_x$是否有某一类统计特征P(例如数据点男女相等)
+* 攻击者构造训练集$D_1, D_2,..., D_n$,这些数据集部分有特征P，训练shadow model $C_1, C_2,...,C_n$, 得到feature vector
+* 对得到的feature vector打上标签，$(feature \  vector, 0)$ , 或 $(feature \ vector, 1)$, 0表示有该特征，1表示无该特征
+* 利用打上标签的数据训练MC
+* 最后用MC去预测$D_x$中是否有特征P
 
 ##Membership Inference Attacks Against Machine Learning Models
+
+
 
 ### problem & attack model
 
@@ -159,6 +188,10 @@ $$
 * 攻击有效的原因
 
 过拟合是这种攻击能成功的很大一部分原因：模型过拟合 $\rightarrow$ 模型记住过多的训练集  $\rightarrow$对训练集中的图片能给出更高的置信率（例如对于训练集的图片，模型90%确信它属于某一类，而非训练集的图片，70%确信它属于某一类）
+
+ 下图是我做实验得到模型过拟合时的表现。可以看出，模型过拟合时，对训练集的数据基本给出了90%以上的置信率，而对测试集的数据，置信率明显不同。
+
+![confidance_score](image/confidance_score.png)
 
 
 
@@ -182,7 +215,7 @@ $$
 
 * 将shadow model的训练集和测试集输入都输入shadow model，分别得到后验概率
 * 对两种数据打上标签 (训练集后验概率, "in")，(测试集后验概率, "out")
-* 用这些数据训练attack model，attack model会学习到两者后验概率的不同，完成membership inference attack（判断某个数据点是否在训练集中）
+* 用这些数据训练attack model，attack model会学习到测试集和训练集后验概率的特征，完成membership inference attack（判断某个数据点是否在训练集中）
 
 
 
@@ -253,7 +286,7 @@ $$
 
 
 
-
+我认为这个攻击能成功利用了模型过拟合时表现的迁移性：无论在哪个训练集上训练，模型一旦过拟合，都会记住更多的训练数据。在预测时，对见过的数据（训练集中的数据）给出更高的置信率。
 
 ### adversary 3
 
@@ -268,6 +301,22 @@ $$
 直接利用模型过拟合时对训练集和测试集数据点给出的置信率不同
 
 攻击者选定一个阈值，置信率大于此阈值，则判定为训练集，否则为测试集
+
+
+
+**这种方法有效的原因分析**
+
+如下图，只要设置一个合适的阈值,攻击能取得不错的效果
+
+![threshold_attack](image/threshold_attack.png)
+
+
+
+
+
+
+
+
 
 
 
