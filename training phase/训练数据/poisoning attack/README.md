@@ -14,7 +14,7 @@
 
 * 目标：模型已经训练完成，但攻击者希望对自己的图片（如下图），模型能将其识别为“4”，并且不影响实际的使用
 
-  ![backdoor](/Users/liurenwan/Desktop/attacks in Neural Networks/training phase/训练数据/poisoning attack/image/backdoor.png)
+  ![backdoor](image/backdoor.png)
 
 * 此类攻击存在的场景：人脸识别广泛应用，例如一家公司只有CEO的脸能通过模型识别，而攻击者希望自己的连被识别为CEO，而不影响CEO自己脸的识别
 
